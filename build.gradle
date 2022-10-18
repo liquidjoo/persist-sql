@@ -1,0 +1,61 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'antlr'
+}
+
+group = 'camp.nextstep.edu'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+
+}
+
+generateGrammarSource {
+    maxHeapSize = "64m"
+    arguments += ["-visitor",
+                  "-long-messages",
+                  "-package", "camp.nextstep.edu.antlr.generated"
+    ]
+
+    doLast {
+        println "Copying generated grammar lexer/parser files to main directory."
+        println "${buildDir}"
+        copy {
+            from "${buildDir}/generated-src/antlr/main"
+            into "src/main/java/camp/nextstep/edu/antlr/generated"
+        }
+        println "Deleting generated grammar lexer/parser files."
+        delete "${buildDir}/generated-src/"
+    }
+}
+
+clean.doLast {
+    file('src/main/java/camp/nextstep/edu/antlr/generated').deleteDir()
+}
+
+dependencies {
+    antlr 'org.antlr:antlr4:4.10.1'
+    implementation 'org.antlr:antlr4-runtime:4.10.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2:1.4.199'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
