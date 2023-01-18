@@ -31,15 +31,15 @@ public class ReflectionTest {
         car = new Car("test", 10000);
     }
 
+    @DisplayName("요구사항 1 - 클래스 정보 출력")
     @Test
-    @DisplayName("Car 객체 정보 가져오기")
     void showClass() {
         Class<Car> carClass = Car.class;
         logger.debug(carClass.getName());
     }
 
+    @DisplayName("요구사항 2 - test로 시작하는 메소드 실행")
     @Test
-    @DisplayName("test로 시작하는 함수 실행")
     void testMethodRun() throws Exception {
         Method[] methods = car.getClass().getDeclaredMethods();
         List<String> filteredMethods = Arrays.stream(methods)
@@ -50,9 +50,9 @@ public class ReflectionTest {
         assertThat(filteredMethods).contains("testGetName", "testGetPrice");
     }
 
+    @DisplayName("요구사항 3 - @PrintView 애노테이션 메소드 실행")
     @Test
-    @DisplayName("@PrintView 애노테이션 메소드 실행")
-    public void runPrintView() {
+    public void testAnnotationMethodRun() {
         Method[] methods = car.getClass().getDeclaredMethods();
         List<String> filteredMethods = Arrays.stream(methods)
             .filter(method -> method.isAnnotationPresent(PrintView.class))
@@ -62,6 +62,7 @@ public class ReflectionTest {
         assertThat(filteredMethods).contains("printView");
     }
 
+    @DisplayName("요구사항 4 - private field에 값 할당")
     @Test
     void privateFieldAccess() throws NoSuchFieldException, IllegalAccessException {
         Field carName = car.getClass().getDeclaredField("name");
@@ -75,6 +76,7 @@ public class ReflectionTest {
         assertThat(car.getPrice()).isEqualTo(100000);
     }
 
+    @DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
     @Test
     void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
         Constructor<Car> constructor = Car.class.getConstructor(String.class, int.class);
@@ -84,6 +86,7 @@ public class ReflectionTest {
         assertThat(car.getPrice()).isEqualTo(1000022);
     }
 
+    @DisplayName("요구사항 6 - 클래스의 Entity 애노에티션을 확인 후 Column 애노테이션이 있는 필드 이름만 가져온다.")
     @Test
     void getAllFieldByColumnAnnotation() {
         Class<Wheel> wheelClass = Wheel.class;
@@ -98,8 +101,8 @@ public class ReflectionTest {
         assertThat(columnNames).hasSize(1);
     }
 
-    @Test
     @DisplayName("요구사항 7 - 클래스의 Entity 애노에티션을 확인 후 Column 애노테이션에 설정된 name 값으로 필드정보를 가져온다.")
+    @Test
     void getFieldByColumnAnnotationNameValue() throws IllegalAccessException {
         Class<Wheel> wheelClass = Wheel.class;
         Wheel wheel = new Wheel("test", 100);
@@ -119,8 +122,8 @@ public class ReflectionTest {
         assertThat(wheelName).isEqualTo("test");
     }
 
-    @Test
     @DisplayName("요구사항 8 - Transient 애노테이션이 있는 경우 필드 값에서 제외를 한다")
+    @Test
     void getFieldByTransient() {
         Class<Wheel> wheelClass = Wheel.class;
 
