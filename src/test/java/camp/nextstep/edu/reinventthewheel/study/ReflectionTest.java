@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
@@ -75,5 +77,19 @@ public class ReflectionTest {
 
         assertThat(car.getName()).isEqualTo("test2");
         assertThat(car.getPrice()).isEqualTo(1000022);
+    }
+
+    @Test
+    void getAllFieldByColumnAnnotation() {
+        Class<Wheel> wheelClass = Wheel.class;
+
+        List<String> columnNames = Arrays.stream(wheelClass.getDeclaredFields())
+            .filter(field -> field.isAnnotationPresent(Column.class))
+            .map(Field::getName)
+            .collect(Collectors.toList());
+
+        assertThat(wheelClass.isAnnotationPresent(Entity.class)).isTrue();
+        assertThat(columnNames).contains("name");
+        assertThat(columnNames).hasSize(1);
     }
 }
