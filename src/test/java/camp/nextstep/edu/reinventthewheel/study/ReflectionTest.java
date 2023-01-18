@@ -105,11 +105,32 @@ public class ReflectionTest {
     @DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
     @Test
     void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-        Constructor<Car> constructor = Car.class.getConstructor(String.class, int.class);
-        Car car = constructor.newInstance("test2", 1000022);
+        Constructor<?>[] constructors = Car.class.getConstructors();
+        Constructor<?> targetCarConstructor = Arrays.stream(constructors)
+            .filter(constructor -> hasSameParameterTypes(constructor, new Class[]{String.class, int.class}))
+            .findFirst()
+            .orElseThrow(NoSuchElementException::new);
+
+        Car car = (Car) targetCarConstructor.newInstance("test2", 1000022);
 
         assertThat(car.getName()).isEqualTo("test2");
         assertThat(car.getPrice()).isEqualTo(1000022);
+    }
+
+    private boolean hasSameParameterTypes(Constructor<?> constructor, Class<?>[] targetParameterTypes) {
+        Class<?>[] parameterTypes = constructor.getParameterTypes();
+
+        if (parameterTypes.length != targetParameterTypes.length) {
+            return false;
+        }
+
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (!parameterTypes[i].equals(targetParameterTypes[i])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @DisplayName("요구사항 6 - 클래스의 Entity 애노에티션을 확인 후 Column 애노테이션이 있는 필드 이름만 가져온다.")
