@@ -11,7 +11,7 @@ public class Wheel {
     @Id
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "target")
     private String name;
 
     private Integer size;

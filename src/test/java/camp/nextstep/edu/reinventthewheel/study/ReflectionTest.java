@@ -148,13 +148,13 @@ public class ReflectionTest {
         assertThat(columnNames).hasSize(1);
     }
 
-    @DisplayName("요구사항 7 - 클래스의 Entity 애노에티션을 확인 후 Column 애노테이션에 설정된 name 값으로 필드정보를 가져온다.")
+    @DisplayName("요구사항 7 - 클래스의 Entity 애노테이션을 확인 후 Column 애노테이션에 설정된 name 값으로 필드정보를 가져온다.")
     @Test
     void getFieldByColumnAnnotationNameValue() throws IllegalAccessException {
         Class<Wheel> wheelClass = Wheel.class;
         Wheel wheel = new Wheel("test", 100);
 
-        String columnName = "name";
+        String columnName = "target";
 
         Field hasColumnAnnotationField = Arrays.stream(wheelClass.getDeclaredFields())
             .filter(field -> field.isAnnotationPresent(Column.class))
