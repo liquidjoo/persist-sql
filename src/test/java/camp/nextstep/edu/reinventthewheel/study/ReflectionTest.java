@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,5 +66,14 @@ public class ReflectionTest {
 
         assertThat(car.getName()).isEqualTo("hello");
         assertThat(car.getPrice()).isEqualTo(100000);
+    }
+
+    @Test
+    void constructorWithArgs() throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+        Constructor<Car> constructor = Car.class.getConstructor(String.class, int.class);
+        Car car = constructor.newInstance("test2", 1000022);
+
+        assertThat(car.getName()).isEqualTo("test2");
+        assertThat(car.getPrice()).isEqualTo(1000022);
     }
 }
