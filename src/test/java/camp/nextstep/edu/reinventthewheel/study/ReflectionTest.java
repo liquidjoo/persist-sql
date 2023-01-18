@@ -40,7 +40,7 @@ public class ReflectionTest {
 
     @DisplayName("요구사항 2 - test로 시작하는 메소드 실행")
     @Test
-    void testMethodRun() throws Exception {
+    void testMethodRun() {
         Method[] methods = car.getClass().getDeclaredMethods();
         List<String> filteredMethods = Arrays.stream(methods)
             .filter(method -> method.getName().startsWith("test"))
