@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -91,5 +92,26 @@ public class ReflectionTest {
         assertThat(wheelClass.isAnnotationPresent(Entity.class)).isTrue();
         assertThat(columnNames).contains("name");
         assertThat(columnNames).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("요구사항 7 - 클래스의 Entity 애노에티션을 확인 후 Column 애노테이션에 설정된 name 값으로 필드정보를 가져온다.")
+    void getFieldByColumnAnnotationNameValue() throws IllegalAccessException {
+        Class<Wheel> wheelClass = Wheel.class;
+        Wheel wheel = new Wheel("test", 100);
+
+        String columnName = "name";
+
+        Field hasColumnAnnotationField = Arrays.stream(wheelClass.getDeclaredFields())
+            .filter(field -> field.isAnnotationPresent(Column.class))
+            .filter(field -> columnName.equals(field.getAnnotation(Column.class).name()))
+            .peek(field -> field.setAccessible(true))
+            .findFirst()
+            .orElseThrow(NoSuchElementException::new);
+
+        String wheelName = (String) hasColumnAnnotationField.get(wheel);
+
+        assertThat(wheelClass.isAnnotationPresent(Entity.class)).isTrue();
+        assertThat(wheelName).isEqualTo("test");
     }
 }
