@@ -71,14 +71,21 @@ public class ReflectionTest {
 
     @DisplayName("요구사항 3 - @PrintView 애노테이션 메소드 실행")
     @Test
-    public void testAnnotationMethodRun() {
+    public void testAnnotationMethodRun() throws InvocationTargetException, IllegalAccessException {
         Method[] methods = car.getClass().getDeclaredMethods();
-        List<String> filteredMethods = Arrays.stream(methods)
+        List<Method> filteredMethods = Arrays.stream(methods)
             .filter(method -> method.isAnnotationPresent(PrintView.class))
+            .collect(Collectors.toList());
+
+        List<String> filteredMethodNames = filteredMethods.stream()
             .map(Method::getName)
             .collect(Collectors.toList());
 
-        assertThat(filteredMethods).contains("printView");
+        for (Method method : filteredMethods) {
+            method.invoke(car);
+        }
+
+        assertThat(filteredMethodNames).contains("printView");
     }
 
     @DisplayName("요구사항 4 - private field에 값 할당")
