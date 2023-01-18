@@ -91,15 +91,15 @@ public class ReflectionTest {
     @DisplayName("요구사항 4 - private field에 값 할당")
     @Test
     void privateFieldAccess() throws NoSuchFieldException, IllegalAccessException {
-        Field carName = car.getClass().getDeclaredField("name");
-        Field carPrice = car.getClass().getDeclaredField("price");
-        carName.setAccessible(true);
-        carPrice.setAccessible(true);
-        carName.set(car, "hello");
-        carPrice.set(car, 100000);
+        Field carClassName = car.getClass().getDeclaredField("name");
+        Field carClassPrice = car.getClass().getDeclaredField("price");
+        carClassName.setAccessible(true);
+        carClassPrice.setAccessible(true);
+        carClassName.set(car, "hello");
+        carClassPrice.set(car, 22222);
 
         assertThat(car.getName()).isEqualTo("hello");
-        assertThat(car.getPrice()).isEqualTo(100000);
+        assertThat(car.getPrice()).isEqualTo(22222);
     }
 
     @DisplayName("요구사항 5 - 인자를 가진 생성자의 인스턴스 생성")
