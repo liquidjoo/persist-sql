@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -49,14 +50,23 @@ public class ReflectionTest {
 
     @DisplayName("요구사항 2 - test로 시작하는 메소드 실행")
     @Test
-    void testMethodRun() {
+    void testMethodRun() throws InvocationTargetException, IllegalAccessException {
         Method[] methods = car.getClass().getDeclaredMethods();
-        List<String> filteredMethods = Arrays.stream(methods)
+        List<Method> filteredMethods = Arrays.stream(methods)
             .filter(method -> method.getName().startsWith("test"))
-            .map(method -> method.getName())
             .collect(Collectors.toList());
 
-        assertThat(filteredMethods).contains("testGetName", "testGetPrice");
+        List<String> filteredMethodNames = filteredMethods.stream()
+            .map(Method::getName)
+            .collect(Collectors.toList());
+
+        List<String> results = new ArrayList<>();
+        for (Method filteredMethod : filteredMethods) {
+            results.add((String) filteredMethod.invoke(car));
+        }
+
+        assertThat(filteredMethodNames).contains("testGetName", "testGetPrice");
+        assertThat(results).contains("test : test", "test : 10000");
     }
 
     @DisplayName("요구사항 3 - @PrintView 애노테이션 메소드 실행")
@@ -65,7 +75,7 @@ public class ReflectionTest {
         Method[] methods = car.getClass().getDeclaredMethods();
         List<String> filteredMethods = Arrays.stream(methods)
             .filter(method -> method.isAnnotationPresent(PrintView.class))
-            .map(method -> method.getName())
+            .map(Method::getName)
             .collect(Collectors.toList());
 
         assertThat(filteredMethods).contains("printView");
