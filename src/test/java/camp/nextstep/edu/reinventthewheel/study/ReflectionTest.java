@@ -5,6 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
@@ -16,11 +23,17 @@ public class ReflectionTest {
         logger.debug(carClass.getName());
     }
 
-    static class Car {
-        private final String name;
+    @Test
+    @DisplayName("test로 시작하는 함수 실행")
+    void testMethodRun() throws Exception {
 
-        public Car(String name) {
-            this.name = name;
-        }
+        Car car = new Car("test", 10000);
+        Method[] methods = car.getClass().getDeclaredMethods();
+        List<String> filteredMethods = Arrays.stream(methods)
+            .filter(method -> method.getName().startsWith("test"))
+            .map(method -> method.getName())
+            .collect(Collectors.toList());
+
+        assertThat(filteredMethods).contains("testGetName", "testGetPrice");
     }
 }
