@@ -36,4 +36,17 @@ public class ReflectionTest {
 
         assertThat(filteredMethods).contains("testGetName", "testGetPrice");
     }
+
+    @Test
+    @DisplayName("@PrintView 애노테이션 메소드 실행")
+    public void runPrintView() {
+        Car car = new Car("test", 10000);
+        Method[] methods = car.getClass().getDeclaredMethods();
+        List<String> filteredMethods = Arrays.stream(methods)
+            .filter(method -> method.isAnnotationPresent(PrintView.class))
+            .map(method -> method.getName())
+            .collect(Collectors.toList());
+
+        assertThat(filteredMethods).contains("printView");
+    }
 }
