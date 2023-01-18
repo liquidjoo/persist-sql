@@ -8,7 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.lang.reflect.*;
+import javax.persistence.Transient;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -113,5 +117,20 @@ public class ReflectionTest {
 
         assertThat(wheelClass.isAnnotationPresent(Entity.class)).isTrue();
         assertThat(wheelName).isEqualTo("test");
+    }
+
+    @Test
+    @DisplayName("요구사항 8 - Transient 애노테이션이 있는 경우 필드 값에서 제외를 한다")
+    void getFieldByTransient() {
+        Class<Wheel> wheelClass = Wheel.class;
+
+        Field[] fields = wheelClass.getDeclaredFields();
+        List<String> nonTransientFieldNames = Arrays.stream(fields)
+            .filter(field -> !field.isAnnotationPresent(Transient.class))
+            .map(Field::getName)
+            .collect(Collectors.toList());
+
+        assertThat(nonTransientFieldNames).contains("name", "size");
+        assertThat(nonTransientFieldNames).doesNotContain("transientValue");
     }
 }
