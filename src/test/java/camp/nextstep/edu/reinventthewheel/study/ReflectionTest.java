@@ -35,7 +35,16 @@ public class ReflectionTest {
     @Test
     void showClass() {
         Class<Car> carClass = Car.class;
+
         logger.debug(carClass.getName());
+
+        for (Method method : carClass.getMethods()) {
+            logger.debug(method.getName());
+        }
+
+        for (Field field : carClass.getDeclaredFields()) {
+            logger.debug(field.getName());
+        }
     }
 
     @DisplayName("요구사항 2 - test로 시작하는 메소드 실행")
