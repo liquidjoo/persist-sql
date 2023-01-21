@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -98,12 +100,27 @@ public class ReflectionTest {
 
     @Test
     @DisplayName("인자를 가진 생성자의 인스턴스 생성")
-    void constructorWithArgs() throws Exception{
+    void constructorWithArgs() throws Exception {
         Class<Car> clazz = Car.class;
         Constructor<Car> constructor = clazz.getDeclaredConstructor(String.class, int.class);
         Car car = constructor.newInstance("제네시스g90", 100_000_000);
 
         assertThat(car.getName()).isEqualTo("제네시스g90");
         assertThat(car.getPrice()).isEqualTo(100_000_000);
+    }
+
+    @Test
+    @DisplayName("클래스의 Entity 애노에티션을 확인 후 Column 애노테이션이 있는 필드 이름만 가져온다.")
+    void getAllFieldByColumnAnnotation() {
+        Class<Wheel> clazz = Wheel.class;
+
+        var columnFields = Arrays.stream(clazz.getDeclaredFields())
+                .filter(it -> it.isAnnotationPresent(Column.class))
+                .map(Field::getName)
+                .collect(Collectors.toList());
+
+        assertThat(clazz.isAnnotationPresent(Entity.class)).isTrue();
+        assertThat(columnFields).hasSize(2);
+        assertThat(columnFields).contains("name", "price");
     }
 }
