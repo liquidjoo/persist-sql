@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -75,5 +76,23 @@ public class ReflectionTest {
                         e.printStackTrace();
                     }
                 });
+    }
+
+    @Test
+    @DisplayName("private field에 값 할당")
+    public void privateFieldAccess() throws Exception {
+        Class<Car> clazz = Car.class;
+        Car car = clazz.getDeclaredConstructor().newInstance();
+        Field nameField = clazz.getDeclaredField("name");
+        nameField.setAccessible(true);
+        nameField.set(car, "제네시스g80");
+
+        Field priceField = clazz.getDeclaredField("price");
+        priceField.setAccessible(true);
+        priceField.set(car, 10_000);
+
+
+        assertThat(car.getName()).isEqualTo("제네시스g80");
+        assertThat(car.getPrice()).isEqualTo(10_000);
     }
 }
