@@ -9,9 +9,9 @@ public class Wheel {
     @Id
     private Long id;
 
-    @Column
+    @Column(name = "column_name")
     private String name;
 
-    @Column
+    @Column(name = "column_price")
     private int price;
 }
