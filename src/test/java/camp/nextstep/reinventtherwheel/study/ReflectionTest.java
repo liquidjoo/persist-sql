@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -135,5 +136,18 @@ public class ReflectionTest {
                 .collect(Collectors.toList());
 
         assertThat(fieldsByColumnName).contains("name", "price");
+    }
+
+    @Test
+    @DisplayName("Transient 애노테이션이 있는 경우 필드 값에서 제외를 한다")
+    void getFieldByTransient() {
+        Class<Wheel> clazz = Wheel.class;
+        var fieldsExcludeTransientField = Arrays.stream(clazz.getDeclaredFields())
+                .filter(it -> !it.isAnnotationPresent(Transient.class))
+                .map(Field::getName)
+                .collect(Collectors.toList());
+
+        assertThat(fieldsExcludeTransientField).hasSize(3);
+        assertThat(fieldsExcludeTransientField).contains("id", "name", "price");
     }
 }
