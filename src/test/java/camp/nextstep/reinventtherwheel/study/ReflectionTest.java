@@ -123,4 +123,17 @@ public class ReflectionTest {
         assertThat(columnFields).hasSize(2);
         assertThat(columnFields).contains("name", "price");
     }
+
+    @Test
+    @DisplayName("클래스의 Entity 애노에티션을 확인 후 Column 애노테이션에 설정된 name 값으로 필드정보를 가져온다.")
+    void getFieldByColumnAnnotationNameValue() {
+        Class<Wheel> clazz = Wheel.class;
+        var fieldsByColumnName = Arrays.stream(clazz.getDeclaredFields())
+                .filter(it -> it.isAnnotationPresent(Column.class))
+                .filter(it -> it.getAnnotation(Column.class).name().startsWith("column_"))
+                .map(Field::getName)
+                .collect(Collectors.toList());
+
+        assertThat(fieldsByColumnName).contains("name", "price");
+    }
 }
