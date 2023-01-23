@@ -59,21 +59,6 @@ class SelectQueryFactoryTest {
         assertThat(result).isEqualTo("select id from TableNoWithNameEntityCar where id = ?");
     }
 
-    @Entity
-    static class EntityCar {
-        @Id
-        private Long id;
-
-        @Column
-        private String name;
-
-        @Column
-        private int price;
-
-        @Transient
-        private boolean hidden;
-    }
-
     static class NoEntityCar {
         @Column
         private String name;
