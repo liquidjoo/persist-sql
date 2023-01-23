@@ -68,12 +68,10 @@ public class InsertQueryFactory {
     }
 
     private Map<String, String> getEntityFields(Class<?> clazz) {
-        var fieldNames = Arrays.stream(clazz.getDeclaredFields())
+        return Arrays.stream(clazz.getDeclaredFields())
                 .filter(it -> it.isAnnotationPresent(Id.class) || it.isAnnotationPresent(Column.class))
                 .map(this::extractColumnName)
                 .collect(Collectors.toMap(Function.identity(), it -> "?", (x, y) -> y, LinkedHashMap::new));
-
-        return fieldNames;
     }
 
     private String extractColumnName(Field field) {
