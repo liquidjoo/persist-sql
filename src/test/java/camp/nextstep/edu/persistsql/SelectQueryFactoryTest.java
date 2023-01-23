@@ -19,7 +19,7 @@ class SelectQueryFactoryTest {
         String result = selectQueryFactory.createQuery(EntityCar.class);
 
         // then
-        assertThat(result).isEqualTo("select id, name, price from EntityCar where id = ? AND name = ? AND price = ?");
+        assertThat(result).isEqualTo("select id, name, price from EntityCar where id = ?");
     }
 
     @Test

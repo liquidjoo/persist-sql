@@ -34,6 +34,15 @@ public class SelectQueryFactory {
         return stringBuilder.toString();
     }
 
+    private List<String> getEntityFieldNames(Class<?> clazz) {
+        List<String> fieldNames = Arrays.stream(clazz.getDeclaredFields())
+                .filter(it -> it.isAnnotationPresent(Id.class) || it.isAnnotationPresent(Column.class))
+                .map(this::extractColumnName)
+                .collect(Collectors.toList());
+
+        return fieldNames;
+    }
+
     private String fromClause(Class<?> clazz) {
         if (isExistTableWithName(clazz)) {
             Table table = clazz.getAnnotation(Table.class);
@@ -56,21 +65,11 @@ public class SelectQueryFactory {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(" where ");
 
-        var answer = getEntityFieldNames(clazz).stream()
-                .map(columnName -> columnName + " = ? ")
-                .collect(Collectors.joining("AND "));
-        stringBuilder.append(answer);
+        String idColumnName = extractColumnName(getIdField(clazz));
+        stringBuilder.append(idColumnName + " = ");
+        stringBuilder.append("? ");
 
         return stringBuilder.toString();
-    }
-
-    private List<String> getEntityFieldNames(Class<?> clazz) {
-        List<String> fieldNames = Arrays.stream(clazz.getDeclaredFields())
-                .filter(it -> it.isAnnotationPresent(Id.class) || it.isAnnotationPresent(Column.class))
-                .map(this::extractColumnName)
-                .collect(Collectors.toList());
-
-        return fieldNames;
     }
 
     private String extractColumnName(Field field) {
@@ -83,5 +82,13 @@ public class SelectQueryFactory {
         }
 
         return field.getName();
+    }
+
+    private Field getIdField(Class<?> clazz) {
+        Field[] declaredFields = clazz.getDeclaredFields();
+        return Arrays.stream(declaredFields)
+                .filter(filed -> filed.isAnnotationPresent(Id.class))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Id 필드가 존재하지 않습니다."));
     }
 }
