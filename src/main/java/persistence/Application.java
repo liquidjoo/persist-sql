@@ -1,13 +1,11 @@
-package camp.nextstep.edu.persistsql;
+package persistence;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PersistSqlApplication {
-
+public class Application {
     public static void main(String[] args) {
-        SpringApplication.run(PersistSqlApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
-
 }

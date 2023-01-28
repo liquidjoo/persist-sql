@@ -1,6 +1,6 @@
-package camp.nextstep.edu.persistsql.sql.ddl;
+package persistence.sql.ddl;
 
-import camp.nextstep.edu.persistsql.dialect.H2Dialect;
+import persistence.dialect.H2Dialect;
 import org.hibernate.type.descriptor.sql.JdbcTypeJavaClassMappings;
 
 public class CustomType {

@@ -1,4 +1,4 @@
-package camp.nextstep.edu.persistsql.dialect;
+package persistence.dialect;
 
 import org.hibernate.MappingException;
 

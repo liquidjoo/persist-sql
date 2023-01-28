@@ -1,4 +1,4 @@
-package camp.nextstep.edu.persistsql.sql.ddl;
+package persistence.sql.ddl;
 
 public class CustomTableGenerator {
 

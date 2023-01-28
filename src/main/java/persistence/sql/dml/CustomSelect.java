@@ -1,4 +1,4 @@
-package camp.nextstep.edu.persistsql.sql.dml;
+package persistence.sql.dml;
 
 import org.springframework.util.StringUtils;
 
